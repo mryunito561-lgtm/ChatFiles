@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatFiles — Chat, amigos y archivos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Acceso: nadie puede entrar al chat sin iniciar sesión -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand auth-brand"><span class="logo">✦</span><span>ChatFiles</span></div>
+      <h1>Bienvenido</h1>
+      <p>Inicia sesión para acceder a tus chats, amigos, grupos y archivos.</p>
+      <form id="login-form">
+        <label>Correo electrónico<input id="login-email" type="email" placeholder="tu@email.com" required></label>
+        <label>Contraseña<input id="login-password" type="password" placeholder="••••••••" required></label>
+        <button class="primary full" type="submit">Iniciar sesión</button>
+      </form>
+      <button class="text-btn" id="register-btn">¿No tienes cuenta? Regístrate</button>
+      <small class="demo-note">Prototipo: el código de verificación se simula. En producción se enviará por email.</small>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="logo">✦</span><span>ChatFiles</span></div>
+      <nav>
+        <button class="nav-btn active" data-view="chat">💬 <span>Chats</span></button>
+        <button class="nav-btn" data-view="friends">👥 <span>Amigos</span></button>
+        <button class="nav-btn" data-view="files">📁 <span>Archivos</span></button>
+        <button class="nav-btn" data-view="profile">👤 <span>Mi perfil</span></button>
+        <button class="nav-btn" data-view="settings">⚙️ <span>Ajustes</span></button>
+      </nav>
+      <div class="user-mini">
+        <div class="avatar">A</div>
+        <div><strong id="side-name">Alex</strong><small id="side-user">@alex_123</small></div>
+        <button id="logout" title="Cerrar sesión">↪</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><h1 id="page-title">Chats</h1><p id="page-subtitle">Solo usuarios con sesión iniciada pueden participar.</p></div>
+        <button class="primary" id="top-action">＋ Nuevo chat</button>
+      </header>
+
+      <section id="chat-view" class="view">
+        <div class="chat-layout">
+          <div class="chat-list">
+            <div class="chat-tabs">
+              <button class="chat-tab active" data-chat="global">🌐 Global</button>
+              <button class="chat-tab" data-chat="friends">👥 Amigos</button>
+              <button class="chat-tab" data-chat="private">🔒 Privados</button>
+              <button class="chat-tab" data-chat="groups">👨‍👩‍👧 Grupos</button>
+            </div>
+            <input class="search" placeholder="🔎 Buscar chats">
+            <div id="chat-items"></div>
+            <div class="empty-list" id="empty-list">Selecciona un chat.</div>
+          </div>
+
+          <div class="chat">
+            <div class="chat-head">
+              <div class="chat-icon" id="chat-icon">🌐</div>
+              <div><strong id="chat-title">Chat global</strong><small id="chat-status">Solo usuarios registrados y conectados</small></div>
+              <button class="ghost">⋯</button>
+            </div>
+            <div class="messages" id="messages">
+              <div class="system-message">🌐 Este es el chat global. Solo pueden escribir usuarios que hayan iniciado sesión.</div>
+              <div class="empty-chat" id="empty-chat">Todavía no hay mensajes. ¡Sé el primero en escribir!</div>
+            </div>
+            <form class="composer" id="message-form">
+              <button type="button" class="attach" id="attach-btn">📎</button>
+              <input id="message-input" placeholder="Escribe un mensaje..." autocomplete="off">
+              <button class="send" type="submit">➤</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="friends-view" class="view hidden">
+        <div class="section-card">
+          <div class="section-heading"><div><h2>Amigos</h2><p>Aquí aparecerán únicamente usuarios registrados.</p></div><button class="primary" id="add-friend">＋ Añadir amigo</button></div>
+          <div class="empty-large">👥<h3>Aún no tienes amigos</h3><p>Busca a una persona por su <b>@nombre de usuario</b> para enviarle una solicitud.</p></div>
+        </div>
+      </section>
+
+      <section id="files-view" class="view hidden">
+        <div class="files-toolbar"><div><h2>Mis archivos</h2><p>Tus archivos pertenecen a tu cuenta y tienen permisos propios.</p></div><label class="primary upload">⬆ Subir archivo<input type="file" id="file-input" hidden></label></div>
+        <div class="dropzone" id="dropzone">Arrastra archivos aquí o <b>selecciona uno</b><small>En la versión real se almacenarán en un servidor seguro.</small></div>
+        <div class="file-grid" id="file-grid">
+          <article class="file-card"><div class="file-icon pdf">PDF</div><div class="file-info"><strong>Ejemplo-proyecto.pdf</strong><small>2.4 MB · Demo</small></div><span class="privacy private">🔒 Privado</span><div class="file-actions"><button class="share">Compartir</button><button>⋯</button></div></article>
+        </div>
+      </section>
+
+      <section id="profile-view" class="view hidden">
+        <div class="profile-card">
+          <div class="banner"></div>
+          <div class="profile-main"><div class="avatar huge">A</div><div class="profile-name"><h2 id="profile-name">Alex</h2><p id="profile-user">@alex_123</p></div><button class="primary" id="edit-profile">✎ Editar perfil</button></div>
+          <p class="bio" id="profile-bio">Personaliza tu perfil y decide qué información quieres mostrar.</p>
+          <div class="profile-stats"><div><b>0</b><span>Amigos</span></div><div><b>0</b><span>Grupos</span></div><div><b>0</b><span>Archivos</span></div></div>
+        </div>
+      </section>
+
+      <section id="settings-view" class="view hidden">
+        <div class="settings-card"><h2>Ajustes</h2>
+          <label>Nombre visible<input id="settings-name" value="Alex"></label>
+          <label>Nombre de usuario<input id="settings-user" value="alex_123"></label>
+          <label>Correo electrónico<input value="tu@email.com" disabled></label>
+          <label class="toggle-row"><span>Permitir solicitudes de amistad</span><input type="checkbox" checked></label>
+          <label class="toggle-row"><span>Mostrarme en usuarios conectados</span><input type="checkbox" checked></label>
+          <button class="primary" id="save-settings">Guardar cambios</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <input type="file" id="hidden-file-input" hidden>
+  <div class="toast" id="toast"></div>
+
+  <div class="modal hidden" id="otp-modal"><div class="modal-box"><h2>Verifica tu correo</h2><p>Hemos enviado un código de 6 dígitos a <b id="otp-email"></b>.</p><input id="otp-code" inputmode="numeric" maxlength="6" placeholder="123456"><button class="primary full" id="verify-btn">Verificar</button><button class="text-btn" id="cancel-otp">Cancelar</button><small class="demo-note">Demo: usa <b>123456</b> como código.</small></div></div>
+
+  <div class="modal hidden" id="profile-modal"><div class="modal-box"><button class="close" id="close-profile">×</button><h2>Personalizar perfil</h2>
+    <label>Nombre visible<input id="modal-name" value="Alex"></label>
+    <label>Nombre de usuario<input id="modal-user" value="alex_123"></label>
+    <label>Biografía<textarea id="modal-bio">Personaliza tu perfil y decide qué información quieres mostrar.</textarea></label>
+    <label>Color del perfil<input type="color" value="#6255e8" id="profile-color"></label>
+    <button class="primary full" id="save-profile">Guardar perfil</button>
+  </div></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
